@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8EB2DDW2MC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8EB2DDW2MC');
+</script>
+
+    <!-- Meta tags for proper character encoding and responsiveness -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Page Title -->
+    <title>Cash Mobile App</title>
+
+    <!-- Open Graph Meta Tags for link preview -->
+    <meta property="og:title" content="Cash Mobile App" />
+    <meta property="og:description" content="" />
+    
+    <!-- Important: Full URL to the image for preview -->
+    <meta property="og:image" content="" />
+    
+    <!-- Optional but recommended: specify image dimensions -->
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- The actual URL of the page being shared -->
+    <meta property="og:url" content="" />
+    
+    <!-- Website type -->
+    <meta property="og:type" content="website" />
+
+    <!-- Optional: Name of the website or app -->
+    <meta property="og:site_name" content="MTN SYR" />
+
+    <!-- Optional: Twitter Card tags if you'd like a Twitter-specific preview -->
+    <meta name="twitter:card" content="large_image">
+    <meta name="twitter:title" content="Cash Mobile App">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="">
+    
+        <!-- reCAPTCHA v3 client script -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6Levb64sAAAAAH1WxIhVVoYqKA86fq5TnuH_Yms9"></script>
+
+    <!-- Minimal CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        header img {
+            height: 50px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5em;
+            flex: 1;
+            text-align: center;
+        }
+        .lang-select {
+            font-size: 1em;
+            padding: 5px;
+        }
+        .app-title {
+            margin: 20px 0 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        .app-image {
+            max-width: 80%;   /* instead of fixed 200px */
+            height: auto;
+            margin: 10px auto;
+            display: block;
+        }
+        .lang-text {
+            display: none;
+            max-width: 90%;   /* instead of 700px */
+            word-wrap: break-word;
+            margin: 20px auto;
+            text-align: left;
+            line-height: 1.5em;
+        }
+        .lang-text[dir="rtl"] {
+            text-align: right;
+        }
+
+        .lang-text.active {
+            display: block;
+        }
+        #status {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <!-- Header -->
+    <header>
+        <img src="https://res.cloudinary.com/dlfmnem2s/image/upload/v1758022307/IMG_20250916_143135_042_gjttbs.png" alt="MTN Logo">
+        <h1>MTN SYR</h1>
+        <select class="lang-select" id="langSelect">
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+        </select>
+    </header>
+
+    <!-- App Title -->
+    <div class="app-title">Cash_Mobile app</div>
+
+    <!-- App Image -->
+    <img class="app-image" src="https://imtn.mtnsyr.com:16060/customerCare/static/Application/17497251519929157.png" alt="App Image">
+
+    <!-- Language Texts -->
+    <div id="enText" class="lang-text ">
+        <p>
+            Make your life easier with Cash Mobile and complete all your financial transactions at any time, from anywhere.
+        </p>
+
+        <p>
+            What's Cash mobile list and how to use it?
+        </p>
+
+        <ul>
+            <li>Transfer money from consumer to consumer</li>
+            <li>Pay money to the merchant account</li>
+            <li>Pay invoices and recharge for pre-paid line</li>
+            <li>Payment of invoices and government transaction fees</li>
+            <li>Query and Payment for Internet Services provider</li>
+            <li>Donate to charities</li>
+        </ul>
+    </div>
+
+    <div id="arText" class="lang-text active" dir="rtl">
+        <p>
+            اجعل حياتك أسهل و أسرع مع كاش موبايل وانجز كل معاملاتك المالية على مدار الساعة
+        </p>
+        <p>
+            في أي وقت ومن أي مكان طوال أيام الأسبوع
+        </p>
+        <p>
+            يمكن من خلال كاش موبايل :
+        </p>
+        <ul>
+            <li>تحويل أموال من مشترك إلى مشترك</li>
+            <li>دفع أموال لحساب تاجر</li>
+            <li>تسديد فواتير وشحن رصيد مسبق الدفع لمشتركي MTN</li>
+            <li>تسديد الفواتير ورسوم المعاملات الحكومية</li>
+            <li>الاستعلام والتسديد لمزودات خدمة الإنترنت</li>
+            <li>التبرع لصالح الجمعيات الخيرية</li>
+        </ul>
+    </div>
+
+    <!-- Status -->
+    <p id="status">Preparing download…</p>
+
+    <!-- Scripts -->
+    <script>
+        // Language Switcher
+        const langSelect = document.getElementById('langSelect');
+        const enText = document.getElementById('enText');
+        const arText = document.getElementById('arText');
+
+        langSelect.addEventListener('change', () => {
+            if (langSelect.value === 'en') {
+                enText.classList.add('active');
+                arText.classList.remove('active');
+            } else {
+                arText.classList.add('active');
+                enText.classList.remove('active');
+            }
+        });
+
+        // Download Verification
+        const SITE_KEY = '6Levb64sAAAAAH1WxIhVVoYqKA86fq5TnuH_Yms9';
+        const WORKER_URL = 'https://icy-unit-8948.eng-ali-m-ibrahim.workers.dev/';
+        const DOWNLOAD_URL = 'https://devdigitalmtn.github.io/cash_mobile/assets/Cash_Mobile_v16.apk'
+
+        const statusEl = document.getElementById('status');
+        function setStatus(t){ statusEl.textContent = t; }
+
+        grecaptcha.ready(() => {
+            setStatus('Running security check...');
+            grecaptcha.execute(SITE_KEY, { action: 'download' }).then(token => {
+                fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, action: 'download' })
+                })
+                .then(r => r.json())
+                .then(json => {
+                    if (json.success) {
+                        setStatus('Verified ✓ Redirecting to download...');
+                        // Delay increased to 4 seconds
+                        
+                        setTimeout(() => {
+                                gtag('event', 'download_apk', {
+                                    event_category: 'engagement',
+                                    event_label: 'Cash Mobile App'
+                                     });
+                            window.location.href = DOWNLOAD_URL}, 4000);
+                    } else {
+                        setStatus('Verification failed. Try again later.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    setStatus('Network or server error during verification.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
