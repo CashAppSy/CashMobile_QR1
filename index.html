@@ -48,7 +48,8 @@ gtag('config', 'G-C5K8XKR0DD');
 
     <!-- PWA / Add to Home Screen (ضروري لإشعارات iOS) -->
     <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dlfmnem2s/image/upload/v1758022307/IMG_20250916_143135_042_gjttbs.png">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -144,6 +145,7 @@ gtag('config', 'G-C5K8XKR0DD');
             تفعيل التنبيهات 🔔
         </button>
         <p id="notifStatus" style="margin-top: 10px; font-weight: bold;"></p>
+        <p><a href="#" onclick="disableNotifications(); return false;" style="font-size:0.9em; color:#888; text-decoration:underline;">إلغاء التنبيهات</a></p>
     </div>
 
     <!-- App Image -->
@@ -336,6 +338,27 @@ gtag('config', 'G-C5K8XKR0DD');
                 icon: n.image || ''
             });
         });
+
+        // ---------- إلغاء التنبيهات (يُحسّن تقييم الموقع ويمنع اعتباره مزعجاً) ----------
+        async function disableNotifications() {
+            try {
+                let token = '';
+                try { token = localStorage.getItem('fcm_token') || ''; } catch (e) {}
+                if (token && TOKEN_ENDPOINT && TOKEN_ENDPOINT.startsWith('http')) {
+                    await fetch(TOKEN_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token, unregister: true })
+                    }).catch(() => {});
+                }
+                try { await messaging.deleteToken(); } catch (e) {}
+                try { localStorage.removeItem('fcm_token'); } catch (e) {}
+                notifStatus.textContent = 'تم إلغاء التنبيهات.';
+                enableBtn.style.display = '';
+            } catch (e) {
+                console.error('خطأ في إلغاء التنبيهات:', e);
+            }
+        }
     </script>
     <script>
         // Language Switcher
@@ -356,7 +379,7 @@ gtag('config', 'G-C5K8XKR0DD');
         // Download Verification
         const SITE_KEY = '6Levb64sAAAAAH1WxIhVVoYqKA86fq5TnuH_Yms9';
         const WORKER_URL = 'https://icy-unit-8948.eng-ali-m-ibrahim.workers.dev/';
-        const DOWNLOAD_URL = 'https://devdigitalmtn.github.io/cash_mobile/assets/Cash_Mobile_v2.0.2.apk'
+        const DOWNLOAD_URL = 'https://devdigitalmtn.github.io/cash_mobile/assets/Cash_Mobile_v16.apk'
 
         const statusEl = document.getElementById('status');
         function setStatus(t){ statusEl.textContent = t; }

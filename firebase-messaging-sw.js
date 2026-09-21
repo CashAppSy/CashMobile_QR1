@@ -14,24 +14,43 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// أيقونة التطبيق الرسمية (تُستخدم دائماً حتى لو لم يُرسل image)
+const APP_ICON = './icon-192.png';
+
 messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] استقبال إشعار في الخلفية: ', payload);
 
-    const notificationTitle = payload.notification.title;
+    const n = payload.notification || {};
+    const data = payload.data || {};
+
     const notificationOptions = {
-        body: payload.notification.body,
-        icon: payload.notification.image,
-        badge: payload.notification.image,
-        data: payload.data || {}
+        body: n.body || '',
+        icon: n.image || APP_ICON,
+        badge: APP_ICON,
+        image: n.image || undefined,
+        // tag: يمنع تكديس إشعارات متشابهة فوق بعضها (يستبدل السابق بدل تراكمه)
+        tag: data.tag || 'cash-mobile',
+        renotify: false,
+        requireInteraction: false,
+        silent: false,
+        data
     };
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
+    self.registration.showNotification(n.title || 'Cash Mobile', notificationOptions);
 });
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-    const url = event.notification.data && event.notification.data.click_action
+    const url = (event.notification.data && event.notification.data.click_action)
         ? event.notification.data.click_action
         : 'https://devdigitalmtn.github.io/cash_mobile/';
-    event.waitUntil(clients.openWindow(url));
+
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+            for (const c of list) {
+                if (c.url === url && 'focus' in c) return c.focus();
+            }
+            return clients.openWindow(url);
+        })
+    );
 });
