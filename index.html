@@ -145,6 +145,7 @@ gtag('config', 'G-C5K8XKR0DD');
             تفعيل التنبيهات 🔔
         </button>
         <p id="notifStatus" style="margin-top: 10px; font-weight: bold;"></p>
+        <p id="tokenDebug" style="margin-top: 8px; font-size: 0.7em; color: #555; word-break: break-all; display: none;"></p>
         <p><a href="#" onclick="disableNotifications(); return false;" style="font-size:0.9em; color:#888; text-decoration:underline;">إلغاء التنبيهات</a></p>
     </div>
 
@@ -265,22 +266,31 @@ gtag('config', 'G-C5K8XKR0DD');
                 console.log('FCM Token:', token);
                 notifStatus.textContent = 'التنبيهات مفعلة ✓';
                 enableBtn.style.display = 'none';
+                const dbg = document.getElementById('tokenDebug');
+                if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'التوكن: ' + token; }
 
                 let stored = '';
                 try { stored = localStorage.getItem('fcm_token') || ''; } catch (e) {}
                 if (token !== stored) {
                     try { localStorage.setItem('fcm_token', token); } catch (e) {}
                     if (TOKEN_ENDPOINT && TOKEN_ENDPOINT.startsWith('http')) {
-                        await fetch(TOKEN_ENDPOINT, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ token })
-                        }).catch(e => console.error('رقم الـ token لم يُحفظ:', e));
+                        try {
+                            const resp = await fetch(TOKEN_ENDPOINT, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ token })
+                            });
+                            if (!resp.ok) {
+                                notifStatus.textContent = 'حُذّف التوكن لكن الخادم رفض التسجيل (HTTP ' + resp.status + ') — أعد النقر على الزر.';
+                            }
+                        } catch (e) {
+                            notifStatus.textContent = 'تعذّر الاتصال بخادم التسجيل: ' + e.message;
+                        }
                     }
                 }
             } catch (err) {
                 console.error('خطأ في الاشتراك:', err);
-                notifStatus.textContent = 'حدث خطأ في تفعيل التنبيهات. تأكد من فتح الموقع عبر HTTPS.';
+                notifStatus.textContent = 'حدث خطأ في تفعيل التنبيهات: ' + (err && err.message ? err.message : err);
             }
         }
 
