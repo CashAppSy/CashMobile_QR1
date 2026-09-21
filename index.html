@@ -362,23 +362,66 @@ gtag('config', 'G-C5K8XKR0DD');
             }
         }
 
-        // محاولة فتح إعدادات الموقع مباشرة (أفضل جهد — بعض المتصفحات تمنع chrome://
-        // من صفحات الويب). إن فشل نعرض الإرشادات اليدوية.
+        // فتح إعدادات الموقع بما يناسب كل جهاز:
+        // - أندرويد Chrome: chrome:// لا يفتح من صفحات الويب إلا يدوياً، لذا نجرّب
+        //   intent:// ثم ننسخ الرابط ليُلصقه المستخدم في شريط العنوان، ثم إرشادات يدوية.
+        // - سطح المكتب: محاولة فتح window.open مباشرة.
+        // - آيفون: تجربة المستخدم لإعادة تعيين إذن التنبيهات في إعدادات النظام.
         function openSiteSettings() {
+            const site = encodeURIComponent(location.origin);
+            const settingsUrl = 'chrome://settings/content/siteDetails?site=' + location.origin;
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            if (isAndroid) {
+                // 1) محاولة فتح إعدادات الموقع عبر Intent خاص بـ Chrome أندرويد
+                const intentUrl = 'intent:chrome://settings/content/siteDetails?site=' + site +
+                    '#Intent;scheme=chrome;package=com.android.chrome;end';
+                let opened = false;
+                try { opened = !!(window.open(intentUrl, '_blank')); } catch (e) {}
+                if (opened) return;
+
+                // 2) نسخ رابط الإعدادات ليُلصقه المستخدم في شريط العنوان
+                let copied = false;
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = settingsUrl;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    copied = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                } catch (e) {}
+
+                notifStatus.innerHTML = (copied
+                    ? 'تم نسخ رابط الإعدادات — الصقه في شريط العنوان ثم اختر «السماح» للإشعارات، أو: '
+                    : 'خطوات لفتح الإعدادات يدوياً: ') +
+                    'اضغط ⟨⋮⟩ → الإعدادات → إعدادات الموقع → ابحث عن ' + location.hostname +
+                    ' → الإشعارات → «السماح». ثم أعد فتح هذه الصفحة.';
+                return;
+            }
+
+            if (isIOSDevice) {
+                notifStatus.innerHTML = 'على آيفون: افتح الإعدادات → Safari → خيارات متقدمة → جرّب تعطيل «Site Data» أو أعد تثبيت التطبيق من الشاشة الرئيسية، ثم أعد فتح هذه الصفحة.';
+                return;
+            }
+
+            // سطح المكتب (Chrome/Edge): محاولة فتح مباشرة
             const attempts = [
-                'chrome://settings/content/siteDetails?site=' + encodeURIComponent(location.origin),
+                'chrome://settings/content/siteDetails?site=' + site,
                 'chrome://settings/content/siteDetails?site=' + encodeURIComponent(location.hostname)
             ];
             for (const u of attempts) {
                 try {
                     const w = window.open(u, '_blank');
                     if (w && !w.closed) {
-                        notifStatus.textContent = 'سيبدأ التحميل بعد التفعيل، أو أعد فتح الصفحة.';
+                        notifStatus.textContent = 'من صفحة الإعدادات اختر «السماح» للإشعارات ثم أعد فتح الصفحة.';
                         return;
                     }
                 } catch (e) { /* جرب الرابط التالي */ }
             }
-            notifStatus.innerHTML = 'لتفعيل الإشعارات يدوياً: 1) اضغط رمز جرس/قفل بجانب شريط العنوان 2) اختر «الإشعارات» 3) اختر «السماح». ثم أعد فتح هذه الصفحة — أو اضغط <a href="#" onclick="location.reload(); return false;">هنا لإعادة التحميل</a>.';
+            notifStatus.innerHTML = 'لتفعيل الإشعارات يدوياً: 1) اضغط رمز جرس/قفل بجانب العنوان 2) «الإشعارات» 3) «السماح». ثم أعد فتح هذه الصفحة.';
         }
     </script>
     <script>
