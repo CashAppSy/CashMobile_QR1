@@ -141,7 +141,6 @@ gtag('config', 'G-C5K8XKR0DD');
     <!-- Notifications section -->
     <div id="notifSection" style="margin: 20px 0;">
         <p id="notifStatus" style="margin-top: 10px; font-weight: bold;"></p>
-        <p id="tokenDebug" style="margin-top: 8px; font-size: 0.7em; color: #555; word-break: break-all; display: none;"></p>
         <p><a href="#" onclick="toggleNotifications(); return false;" style="font-size:0.9em; color:#888; text-decoration:underline;">إلغاء التنبيهات</a></p>
     </div>
 
@@ -258,10 +257,7 @@ gtag('config', 'G-C5K8XKR0DD');
                     vapidKey,
                     serviceWorkerRegistration: registration
                 });
-                console.log('FCM Token:', token);
                 notifStatus.textContent = 'التنبيهات مفعلة ✓';
-                const dbg = document.getElementById('tokenDebug');
-                if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'التوكن: ' + token; }
 
                 let stored = '';
                 try { stored = localStorage.getItem('fcm_token') || ''; } catch (e) {}
@@ -351,8 +347,6 @@ gtag('config', 'G-C5K8XKR0DD');
                 }
                 try { await messaging.deleteToken(); } catch (e) {}
                 try { localStorage.removeItem('fcm_token'); } catch (e) {}
-                const dbg = document.getElementById('tokenDebug');
-                if (dbg) dbg.style.display = 'none';
                 notifStatus.textContent = 'تم إلغاء التنبيهات.';
             } catch (e) {
                 console.error('خطأ في إلغاء التنبيهات:', e);
