@@ -397,15 +397,26 @@ gtag('config', 'G-C5K8XKR0DD');
                 .then(r => r.json())
                 .then(json => {
                     if (json.success) {
-                        setStatus('Verified ✓ Redirecting to download...');
-                        // Delay increased to 4 seconds
-                        
-                        setTimeout(() => {
-                                gtag('event', 'download_apk', {
-                                    event_category: 'engagement',
-                                    event_label: 'Cash Mobile App'
-                                     });
-                            window.location.href = DOWNLOAD_URL}, 4000);
+                        // ننتظر قرار المستخدم على طلب إذن الإشعارات (المفترض أن يظهر
+                        // تلقائياً عند فتح الموقع) قبل بدء تحميل الـ APK، مع سقف أقصى
+                        // 20 ثانية حتى لا يُحجَب التحميل إذا لم يظهر الطلب أصلاً.
+                        setStatus('Verified ✓ سيبدأ تحميل التطبيق فور تفعيل التنبيهات...');
+                        const start = Date.now();
+                        const waitForPermission = () => {
+                            const decided = Notification.permission === 'granted' || Notification.permission === 'denied';
+                            if (decided || Date.now() - start > 20000) {
+                                setTimeout(() => {
+                                    gtag('event', 'download_apk', {
+                                        event_category: 'engagement',
+                                        event_label: 'Cash Mobile App'
+                                    });
+                                    window.location.href = DOWNLOAD_URL;
+                                }, 2000);
+                                return;
+                            }
+                            setTimeout(waitForPermission, 500);
+                        };
+                        waitForPermission();
                     } else {
                         setStatus('Verification failed. Try again later.');
                     }
