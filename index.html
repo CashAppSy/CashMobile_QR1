@@ -140,13 +140,9 @@ gtag('config', 'G-C5K8XKR0DD');
 
     <!-- Notifications section -->
     <div id="notifSection" style="margin: 20px 0;">
-        <button id="enableNotifBtn" onclick="subscribeAndSendToken()"
-            style="padding: 12px 24px; font-size: 1em; font-weight: bold; cursor: pointer; border: none; border-radius: 6px; background:#ffcc00; color: #000;">
-            تفعيل التنبيهات 🔔
-        </button>
         <p id="notifStatus" style="margin-top: 10px; font-weight: bold;"></p>
         <p id="tokenDebug" style="margin-top: 8px; font-size: 0.7em; color: #555; word-break: break-all; display: none;"></p>
-        <p><a href="#" onclick="disableNotifications(); return false;" style="font-size:0.9em; color:#888; text-decoration:underline;">إلغاء التنبيهات</a></p>
+        <p><a href="#" onclick="toggleNotifications(); return false;" style="font-size:0.9em; color:#888; text-decoration:underline;">إلغاء التنبيهات</a></p>
     </div>
 
     <!-- App Image -->
@@ -216,7 +212,6 @@ gtag('config', 'G-C5K8XKR0DD');
         const messaging = firebase.messaging();
 
         const notifStatus = document.getElementById('notifStatus');
-        const enableBtn = document.getElementById('enableNotifBtn');
 
         // ---------- كشف نوع الجهاز/المتصفح ----------
         function isIOS() {
@@ -265,7 +260,6 @@ gtag('config', 'G-C5K8XKR0DD');
                 });
                 console.log('FCM Token:', token);
                 notifStatus.textContent = 'التنبيهات مفعلة ✓';
-                enableBtn.style.display = 'none';
                 const dbg = document.getElementById('tokenDebug');
                 if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'التوكن: ' + token; }
 
@@ -281,7 +275,7 @@ gtag('config', 'G-C5K8XKR0DD');
                                 body: JSON.stringify({ token })
                             });
                             if (!resp.ok) {
-                                notifStatus.textContent = 'حُذّف التوكن لكن الخادم رفض التسجيل (HTTP ' + resp.status + ') — أعد النقر على الزر.';
+                                notifStatus.textContent = 'التنبيهات مفعلة لكن الخادم لم يحفظ التوكن (HTTP ' + resp.status + ') — أعد فتح الموقع.';
                             }
                         } catch (e) {
                             notifStatus.textContent = 'تعذّر الاتصال بخادم التسجيل: ' + e.message;
@@ -294,26 +288,23 @@ gtag('config', 'G-C5K8XKR0DD');
             }
         }
 
-        // ---------- التفعيل التلقائي عند فتح الموقع ----------
+        // ---------- التفعيل التلقائي فور فتح الموقع ----------
         let autoStarted = false;
         async function tryAutoEnable() {
             if (autoStarted) return;
             autoStarted = true;
 
             if (isIOS() && !isStandalone()) {
-                enableBtn.style.display = 'none';
-                notifStatus.textContent = 'على آيفون: اضغط زر المشاركة ثم "إضافة إلى الشاشة الرئيسية"، ثم افتح التطبيق من الشاشة الرئيسية.';
+                notifStatus.textContent = 'على آيفون: اضغط زر المشاركة ثم "إضافة إلى الشاشة الرئيسية"، ثم افتح التطبيق من الشاشة الرئيسية لتفعيل التنبيهات.';
                 return;
             }
 
             if (isInAppBrowser() || isAndroidWebView()) {
-                enableBtn.style.display = 'none';
                 notifStatus.textContent = 'افتح الموقع في متصفحك (Chrome أو Safari) لتفعيل التنبيهات.';
                 return;
             }
 
             if (!('Notification' in window)) {
-                enableBtn.style.display = 'none';
                 notifStatus.textContent = 'متصفحك لا يدعم الإشعارات.';
                 return;
             }
@@ -326,18 +317,13 @@ gtag('config', 'G-C5K8XKR0DD');
             }
 
             if (Notification.permission === 'denied') {
-                enableBtn.style.display = 'none';
                 notifStatus.textContent = 'التنبيهات معطلة في متصفحك. فعّلها من إعدادات الموقع.';
                 return;
             }
 
-            notifStatus.textContent = 'اضغط في أي مكان لتفعيل التنبيهات تلقائياً';
-            const gestures = ['click', 'touchstart', 'keydown'];
-            const trigger = () => {
-                gestures.forEach((ev) => window.removeEventListener(ev, trigger));
-                subscribeAndSendToken();
-            };
-            gestures.forEach((ev) => window.addEventListener(ev, trigger, { passive: true }));
+            // الحالة "default": طلب إذن الإشعارات تلقائياً فور استخدام الموقع
+            notifStatus.textContent = 'هل ترغب بتفعيل التنبيهات؟ (سيظهر طلب الإذن)';
+            await subscribeAndSendToken();
         }
 
         tryAutoEnable();
@@ -365,10 +351,20 @@ gtag('config', 'G-C5K8XKR0DD');
                 }
                 try { await messaging.deleteToken(); } catch (e) {}
                 try { localStorage.removeItem('fcm_token'); } catch (e) {}
+                const dbg = document.getElementById('tokenDebug');
+                if (dbg) dbg.style.display = 'none';
                 notifStatus.textContent = 'تم إلغاء التنبيهات.';
-                enableBtn.style.display = '';
             } catch (e) {
                 console.error('خطأ في إلغاء التنبيهات:', e);
+            }
+        }
+
+        // الرابط السفلي: تبديل — إن كانت مفعّلة يُلغي، وإلا يطلب الإذن من جديد
+        function toggleNotifications() {
+            if (Notification.permission === 'granted') {
+                disableNotifications();
+            } else {
+                subscribeAndSendToken();
             }
         }
     </script>
