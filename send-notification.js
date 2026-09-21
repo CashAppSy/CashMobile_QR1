@@ -26,25 +26,14 @@ const title = 'Cash Mobile';
 const body = 'عرض جديد! خصم 20% اليوم فقط 🎉';
 const imageUrl = 'https://imtn.mtnsyr.com:16060/customerCare/static/Application/17497251519929157.png';
 
-// نرسل رسالة notification: يعرضها المتصفح تلقائياً (موثوقية أعلى)،
-// والـ Service Worker لا يعرضها مجدداً لمنع التكرار.
+// نرسل data-only: الـ Service Worker يعرض الإشعار بأيقونة كاش موبايل الملوّنة
+// (بدون شعار Chrome)
 const message = {
-    notification: {
+    data: {
         title,
         body,
-        image: imageUrl
-    },
-    webpush: {
-        notification: {
-            title,
-            body,
-            icon: 'https://cashappsy.github.io/Test/icon-192.png',
-            tag: 'cash-mobile',
-            renotify: false
-        }
-    },
-    data: {
-        click_action: 'https://cashappsy.github.io/Test/'
+        image: imageUrl,
+        click_action: 'https://cashappsy.github.io/CashMobile_QR1/'
     },
     token: TARGET_TOKEN
 };
