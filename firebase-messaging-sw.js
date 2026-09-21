@@ -20,23 +20,27 @@ const APP_ICON = './icon-192.png';
 messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] استقبال إشعار في الخلفية: ', payload);
 
-    const n = payload.notification || {};
-    const data = payload.data || {};
+    // منع الإشعار المكرر: إذا احتوت الرسالة حقل notification
+    // فإن المتصفح يعرضها تلقائياً — لذلك لا نعرضها مرة أخرى.
+    if (payload.notification) return;
+
+    const d = payload.data || {};
 
     const notificationOptions = {
-        body: n.body || '',
-        icon: n.image || APP_ICON,
+        body: d.body || '',
+        // الأيقونة الصغيرة دائماً شعار التطبيق، والصورة الكبيرة (image) اختيارية
+        icon: d.icon || APP_ICON,
         badge: APP_ICON,
-        image: n.image || undefined,
+        image: d.image || undefined,
         // tag: يمنع تكديس إشعارات متشابهة فوق بعضها (يستبدل السابق بدل تراكمه)
-        tag: data.tag || 'cash-mobile',
+        tag: d.tag || 'cash-mobile',
         renotify: false,
         requireInteraction: false,
         silent: false,
-        data
+        data: d
     };
 
-    self.registration.showNotification(n.title || 'Cash Mobile', notificationOptions);
+    self.registration.showNotification(d.title || 'Cash Mobile', notificationOptions);
 });
 
 self.addEventListener('notificationclick', (event) => {
