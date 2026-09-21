@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5K8XKR0DD"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C5K8XKR0DD');
+</script>
+
+    <!-- Meta tags for proper character encoding and responsiveness -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Page Title -->
+    <title>Cash Mobile App</title>
+
+    <!-- Open Graph Meta Tags for link preview -->
+    <meta property="og:title" content="Cash Mobile App" />
+    <meta property="og:description" content="" />
+    
+    <!-- Important: Full URL to the image for preview -->
+    <meta property="og:image" content="" />
+    
+    <!-- Optional but recommended: specify image dimensions -->
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- The actual URL of the page being shared -->
+    <meta property="og:url" content="" />
+    
+    <!-- Website type -->
+    <meta property="og:type" content="website" />
+
+    <!-- Optional: Name of the website or app -->
+    <meta property="og:site_name" content="MTN SYR" />
+
+    <!-- Optional: Twitter Card tags if you'd like a Twitter-specific preview -->
+    <meta name="twitter:card" content="large_image">
+    <meta name="twitter:title" content="Cash Mobile App">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="">
+    
+        <!-- reCAPTCHA v3 client script -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6Levb64sAAAAAH1WxIhVVoYqKA86fq5TnuH_Yms9"></script>
+
+    <!-- PWA / Add to Home Screen (ضروري لإشعارات iOS) -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dlfmnem2s/image/upload/v1758022307/IMG_20250916_143135_042_gjttbs.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffcc00">
+
+    <!-- Firebase SDK (FCM للويب) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
+
+    <!-- Minimal CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        header img {
+            height: 50px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5em;
+            flex: 1;
+            text-align: center;
+        }
+        .lang-select {
+            font-size: 1em;
+            padding: 5px;
+        }
+        .app-title {
+            margin: 20px 0 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        .app-image {
+            max-width: 80%;   /* instead of fixed 200px */
+            height: auto;
+            margin: 10px auto;
+            display: block;
+        }
+        .lang-text {
+            display: none;
+            max-width: 90%;   /* instead of 700px */
+            word-wrap: break-word;
+            margin: 20px auto;
+            text-align: left;
+            line-height: 1.5em;
+        }
+        .lang-text[dir="rtl"] {
+            text-align: right;
+        }
+
+        .lang-text.active {
+            display: block;
+        }
+        #status {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <!-- Header -->
+    <header>
+        <img src="https://res.cloudinary.com/dlfmnem2s/image/upload/v1758022307/IMG_20250916_143135_042_gjttbs.png" alt="MTN Logo">
+        <h1>MTN SYR</h1>
+        <select class="lang-select" id="langSelect">
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+        </select>
+    </header>
+
+    <!-- App Title -->
+    <div class="app-title">Cash_Mobile app</div>
+
+    <!-- Notifications section -->
+    <div id="notifSection" style="margin: 20px 0;">
+        <button id="enableNotifBtn" onclick="subscribeAndSendToken()"
+            style="padding: 12px 24px; font-size: 1em; font-weight: bold; cursor: pointer; border: none; border-radius: 6px; background:#ffcc00; color: #000;">
+            تفعيل التنبيهات 🔔
+        </button>
+        <p id="notifStatus" style="margin-top: 10px; font-weight: bold;"></p>
+    </div>
+
+    <!-- App Image -->
+    <img class="app-image" src="https://imtn.mtnsyr.com:16060/customerCare/static/Application/17497251519929157.png" alt="App Image">
+
+    <!-- Language Texts -->
+    <div id="enText" class="lang-text ">
+        <p>
+            Make your life easier with Cash Mobile and complete all your financial transactions at any time, from anywhere.
+        </p>
+
+        <p>
+            What's Cash mobile list and how to use it?
+        </p>
+
+        <ul>
+            <li>Transfer money from consumer to consumer</li>
+            <li>Pay money to the merchant account</li>
+            <li>Pay invoices and recharge for pre-paid line</li>
+            <li>Payment of invoices and government transaction fees</li>
+            <li>Query and Payment for Internet Services provider</li>
+            <li>Donate to charities</li>
+        </ul>
+    </div>
+
+    <div id="arText" class="lang-text active" dir="rtl">
+        <p>
+            اجعل حياتك أسهل و أسرع مع كاش موبايل وانجز كل معاملاتك المالية على مدار الساعة
+        </p>
+        <p>
+            في أي وقت ومن أي مكان طوال أيام الأسبوع
+        </p>
+        <p>
+            يمكن من خلال كاش موبايل :
+        </p>
+        <ul>
+            <li>تحويل أموال من مشترك إلى مشترك</li>
+            <li>دفع أموال لحساب تاجر</li>
+            <li>تسديد فواتير وشحن رصيد مسبق الدفع لمشتركي MTN</li>
+            <li>تسديد الفواتير ورسوم المعاملات الحكومية</li>
+            <li>الاستعلام والتسديد لمزودات خدمة الإنترنت</li>
+            <li>التبرع لصالح الجمعيات الخيرية</li>
+        </ul>
+    </div>
+
+    <!-- Status -->
+    <p id="status">Preparing download…</p>
+
+    <!-- Scripts -->
+    <script>
+        // ================= FCM / إشعارات الويب =================
+        const firebaseConfig = {
+            apiKey: 'AIzaSyDeQqbytuAjm7qQpHwSfeXIUmYuXobeQgg',
+            authDomain: 'test-d371d.firebaseapp.com',
+            projectId: 'test-d371d',
+            storageBucket: 'test-d371d.firebasestorage.app',
+            messagingSenderId: '549208423494',
+            appId: '1:549208423494:web:f353d8d3555ca146ef1e47',
+            measurementId: 'G-CCJYPD8PPY'
+        };
+
+        const vapidKey = 'BGmy8E8ZQstBL0BYE5XL3C79DZQ396CLdbPyCWBCpgj_Qr0x42KfxV_6SDZA2x51HtoefhBZfsgXDUuARwhChMI';
+
+        const TOKEN_ENDPOINT = 'https://cash-mobile-fcm.eng-ali-m-ibrahim.workers.dev/register';
+
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        const notifStatus = document.getElementById('notifStatus');
+        const enableBtn = document.getElementById('enableNotifBtn');
+
+        // ---------- كشف نوع الجهاز/المتصفح ----------
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+        function isStandalone() {
+            return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+                window.navigator.standalone === true;
+        }
+        function isAndroidWebView() {
+            return /wv/i.test(navigator.userAgent) && /Android/i.test(navigator.userAgent);
+        }
+        function isInAppBrowser() {
+            return /FBAN|FBAV|Instagram|Telegram|WhatsApp|Line|Messenger/i.test(navigator.userAgent);
+        }
+
+        // ---------- تسجيل الـ Service Worker مرة واحدة ----------
+        let swRegistration = null;
+        async function ensureServiceWorker() {
+            if (swRegistration) return swRegistration;
+            if ('serviceWorker' in navigator) {
+                try {
+                    swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+                } catch (e) {
+                    console.warn('ServiceWorker register:', e);
+                }
+            }
+            return swRegistration;
+        }
+
+        // ---------- الاشتراك الفعلي (طلب الإذن + الحصول على token) ----------
+        async function subscribeAndSendToken() {
+            try {
+                const perm = await Notification.requestPermission();
+                if (perm !== 'granted') {
+                    notifStatus.textContent = 'تم رفض إذن التنبيهات. يمكنك السماح لاحقاً من إعدادات المتصفح.';
+                    return;
+                }
+
+                const registration = await ensureServiceWorker();
+                const token = await messaging.getToken({
+                    vapidKey,
+                    serviceWorkerRegistration: registration
+                });
+                console.log('FCM Token:', token);
+                notifStatus.textContent = 'التنبيهات مفعلة ✓';
+                enableBtn.style.display = 'none';
+
+                let stored = '';
+                try { stored = localStorage.getItem('fcm_token') || ''; } catch (e) {}
+                if (token !== stored) {
+                    try { localStorage.setItem('fcm_token', token); } catch (e) {}
+                    if (TOKEN_ENDPOINT && TOKEN_ENDPOINT.startsWith('http')) {
+                        await fetch(TOKEN_ENDPOINT, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ token })
+                        }).catch(e => console.error('رقم الـ token لم يُحفظ:', e));
+                    }
+                }
+            } catch (err) {
+                console.error('خطأ في الاشتراك:', err);
+                notifStatus.textContent = 'حدث خطأ في تفعيل التنبيهات. تأكد من فتح الموقع عبر HTTPS.';
+            }
+        }
+
+        // ---------- التفعيل التلقائي عند فتح الموقع ----------
+        let autoStarted = false;
+        async function tryAutoEnable() {
+            if (autoStarted) return;
+            autoStarted = true;
+
+            if (isIOS() && !isStandalone()) {
+                enableBtn.style.display = 'none';
+                notifStatus.textContent = 'على آيفون: اضغط زر المشاركة ثم "إضافة إلى الشاشة الرئيسية"، ثم افتح التطبيق من الشاشة الرئيسية.';
+                return;
+            }
+
+            if (isInAppBrowser() || isAndroidWebView()) {
+                enableBtn.style.display = 'none';
+                notifStatus.textContent = 'افتح الموقع في متصفحك (Chrome أو Safari) لتفعيل التنبيهات.';
+                return;
+            }
+
+            if (!('Notification' in window)) {
+                enableBtn.style.display = 'none';
+                notifStatus.textContent = 'متصفحك لا يدعم الإشعارات.';
+                return;
+            }
+
+            await ensureServiceWorker();
+
+            if (Notification.permission === 'granted') {
+                await subscribeAndSendToken();
+                return;
+            }
+
+            if (Notification.permission === 'denied') {
+                enableBtn.style.display = 'none';
+                notifStatus.textContent = 'التنبيهات معطلة في متصفحك. فعّلها من إعدادات الموقع.';
+                return;
+            }
+
+            notifStatus.textContent = 'اضغط في أي مكان لتفعيل التنبيهات تلقائياً';
+            const gestures = ['click', 'touchstart', 'keydown'];
+            const trigger = () => {
+                gestures.forEach((ev) => window.removeEventListener(ev, trigger));
+                subscribeAndSendToken();
+            };
+            gestures.forEach((ev) => window.addEventListener(ev, trigger, { passive: true }));
+        }
+
+        tryAutoEnable();
+
+        // استقبال الإشعارات أثناء فتح الصفحة (في المقدمة)
+        messaging.onMessage((payload) => {
+            const n = payload.notification || {};
+            new Notification(n.title || 'Cash Mobile', {
+                body: n.body || '',
+                icon: n.image || ''
+            });
+        });
+    </script>
+    <script>
+        // Language Switcher
+        const langSelect = document.getElementById('langSelect');
+        const enText = document.getElementById('enText');
+        const arText = document.getElementById('arText');
+
+        langSelect.addEventListener('change', () => {
+            if (langSelect.value === 'en') {
+                enText.classList.add('active');
+                arText.classList.remove('active');
+            } else {
+                arText.classList.add('active');
+                enText.classList.remove('active');
+            }
+        });
+
+        // Download Verification
+        const SITE_KEY = '6Levb64sAAAAAH1WxIhVVoYqKA86fq5TnuH_Yms9';
+        const WORKER_URL = 'https://icy-unit-8948.eng-ali-m-ibrahim.workers.dev/';
+        const DOWNLOAD_URL = 'https://devdigitalmtn.github.io/cash_mobile/assets/Cash_Mobile_v16.apk'
+
+        const statusEl = document.getElementById('status');
+        function setStatus(t){ statusEl.textContent = t; }
+
+        grecaptcha.ready(() => {
+            setStatus('Running security check...');
+            grecaptcha.execute(SITE_KEY, { action: 'download' }).then(token => {
+                fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, action: 'download' })
+                })
+                .then(r => r.json())
+                .then(json => {
+                    if (json.success) {
+                        setStatus('Verified ✓ Redirecting to download...');
+                        // Delay increased to 4 seconds
+                        
+                        setTimeout(() => {
+                                gtag('event', 'download_apk', {
+                                    event_category: 'engagement',
+                                    event_label: 'Cash Mobile App'
+                                     });
+                            window.location.href = DOWNLOAD_URL}, 4000);
+                    } else {
+                        setStatus('Verification failed. Try again later.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    setStatus('Network or server error during verification.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

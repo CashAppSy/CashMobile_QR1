@@ -1,0 +1,26 @@
+{
+  "name": "Cash Mobile App",
+  "short_name": "Cash Mobile",
+  "description": "تطبيق كاش موبايل للمعاملات المالية اليومية",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffcc00",
+  "icons": [
+    {
+      "src": "https://imtn.mtnsyr.com:16060/customerCare/static/Application/17497251519929157.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://imtn.mtnsyr.com:16060/customerCare/static/Application/17497251519929157.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
