@@ -34,9 +34,17 @@ const message = {
         body,
         image: imageUrl
     },
+    webpush: {
+        notification: {
+            title,
+            body,
+            icon: 'https://cashappsy.github.io/Test/icon-192.png',
+            tag: 'cash-mobile',
+            renotify: false
+        }
+    },
     data: {
-        click_action: 'https://devdigitalmtn.github.io/cash_mobile/',
-        category: 'promo'
+        click_action: 'https://cashappsy.github.io/Test/'
     },
     token: TARGET_TOKEN
 };
