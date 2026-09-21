@@ -47,7 +47,7 @@ self.addEventListener('notificationclick', (event) => {
     event.notification.close();
     const url = (event.notification.data && event.notification.data.click_action)
         ? event.notification.data.click_action
-        : 'https://devdigitalmtn.github.io/cash_mobile/';
+        : 'https://cashappsy.github.io/Test/';
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
