@@ -28,9 +28,9 @@ messaging.onBackgroundMessage((payload) => {
 
     const notificationOptions = {
         body: d.body || '',
-        // الأيقونة الصغيرة دائماً شعار التطبيق، والصورة الكبيرة (image) اختيارية
+        // الأيقونة الملوّنة الكبيرة
         icon: d.icon || APP_ICON,
-        badge: APP_ICON,
+        // لا نضع badge: حتى لا تظهر أيقونة بيضاء إضافية على أندرويد
         image: d.image || undefined,
         // tag: يمنع تكديس إشعارات متشابهة فوق بعضها (يستبدل السابق بدل تراكمه)
         tag: d.tag || 'cash-mobile',
@@ -57,4 +57,10 @@ self.addEventListener('notificationclick', (event) => {
             return clients.openWindow(url);
         })
     );
+});
+
+// يحل محل النسخة القديمة فوراً (بدون انتظار إغلاق التبويبات)
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (event) => {
+    event.waitUntil(self.clients.claim());
 });

@@ -238,7 +238,9 @@ gtag('config', 'G-C5K8XKR0DD');
             if (swRegistration) return swRegistration;
             if ('serviceWorker' in navigator) {
                 try {
-                    swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+                    swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', { updateViaCache: 'none' });
+                    // فرض التحقق من نسخة الـ Service Worker المحدّثة (يتجاهل الكاش)
+                    if (swRegistration.update) swRegistration.update().catch(() => {});
                 } catch (e) {
                     console.warn('ServiceWorker register:', e);
                 }
