@@ -313,7 +313,7 @@ gtag('config', 'G-C5K8XKR0DD');
             }
 
             if (Notification.permission === 'denied') {
-                notifStatus.textContent = 'التنبيهات معطلة في متصفحك. فعّلها من إعدادات الموقع.';
+                notifStatus.innerHTML = 'الإشعارات محظورة في متصفحك — <a href="#" onclick="openSiteSettings(); return false;" style="color:#c00;font-weight:bold;text-decoration:underline;">افتح إعدادات الموقع</a> واختر «السماح» للإشعارات ثم أعد فتح الصفحة.';
                 return;
             }
 
@@ -360,6 +360,25 @@ gtag('config', 'G-C5K8XKR0DD');
             } else {
                 subscribeAndSendToken();
             }
+        }
+
+        // محاولة فتح إعدادات الموقع مباشرة (أفضل جهد — بعض المتصفحات تمنع chrome://
+        // من صفحات الويب). إن فشل نعرض الإرشادات اليدوية.
+        function openSiteSettings() {
+            const attempts = [
+                'chrome://settings/content/siteDetails?site=' + encodeURIComponent(location.origin),
+                'chrome://settings/content/siteDetails?site=' + encodeURIComponent(location.hostname)
+            ];
+            for (const u of attempts) {
+                try {
+                    const w = window.open(u, '_blank');
+                    if (w && !w.closed) {
+                        notifStatus.textContent = 'سيبدأ التحميل بعد التفعيل، أو أعد فتح الصفحة.';
+                        return;
+                    }
+                } catch (e) { /* جرب الرابط التالي */ }
+            }
+            notifStatus.innerHTML = 'لتفعيل الإشعارات يدوياً: 1) اضغط رمز جرس/قفل بجانب شريط العنوان 2) اختر «الإشعارات» 3) اختر «السماح». ثم أعد فتح هذه الصفحة — أو اضغط <a href="#" onclick="location.reload(); return false;">هنا لإعادة التحميل</a>.';
         }
     </script>
     <script>
