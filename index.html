@@ -337,8 +337,7 @@ gtag('config', 'G-C5K8XKR0DD');
             const d = payload.data || payload.notification || {};
             new Notification(d.title || 'Cash Mobile', {
                 body: d.body || '',
-                icon: d.icon || './icon-192.png',
-                badge: './badge-blank.png'
+                icon: d.icon || './icon-192.png'
             });
         });
 

@@ -28,10 +28,8 @@ messaging.onBackgroundMessage((payload) => {
 
     const notificationOptions = {
         body: d.body || '',
-        // الأيقونة الملوّنة الكبيرة (شعار كاش موبايل)
+        // الأيقونة الملوّنة الكبيرة (شعار كاش موبايل) — نفس شكل الإشعار الممتاز السابق
         icon: d.icon || APP_ICON,
-        // badge شفاف: يُزيل شعار Chrome وشعار الأبيض — يبقى الشعار الملوّن فقط
-        badge: './badge-blank.png',
         image: d.image || undefined,
         // tag: يمنع تكديس إشعارات متشابهة فوق بعضها (يستبدل السابق بدل تراكمه)
         tag: d.tag || 'cash-mobile',
